@@ -1,0 +1,43 @@
+<Html code>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Count by Country</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Student Count by Country</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Country</th>
+                <th>Student Count</th>
+            </tr>
+        </thead>
+        <tbody id="student-count-table">
+            <!-- Data will be populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        axios.get('https://<your-function-app-name>.azurewebsites.net/api/GetStudentCount')
+            .then(response => {
+                const data = response.data;
+                const tableBody = document.getElementById('student-count-table');
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    const countryCell = document.createElement('td');
+                    countryCell.textContent = item.Country;
+                    const countCell = document.createElement('td');
+                    countCell.textContent = item.StudentCount;
+                    row.appendChild(countryCell);
+                    row.appendChild(countCell);
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    </script>
+</body>
+</html>
