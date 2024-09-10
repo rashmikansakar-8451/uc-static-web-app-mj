@@ -1,82 +1,43 @@
+<Html code>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Count by Country</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            margin: 20px 0;
-        }
-        table {
-            width: 50%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background-color: white;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background-color: #f8f8f8;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-
     <h1>Student Count by Country</h1>
-    <table>
+    <table border="1">
         <thead>
             <tr>
                 <th>Country</th>
                 <th>Student Count</th>
             </tr>
         </thead>
-        <tbody id="student-data">
-            <!-- Data will be inserted here dynamically -->
+        <tbody id="student-count-table">
+            <!-- Data will be populated here -->
         </tbody>
     </table>
 
     <script>
-        // Example data - Replace this with an actual API call or database query.
-        const studentCountData = [
-            { country: 'USA', count: 150 },
-            { country: 'UK', count: 120 },
-            { country: 'India', count: 200 },
-            { country: 'Germany', count: 80 },
-            { country: 'Australia', count: 50 }
-        ];
-
-        const tableBody = document.getElementById('student-data');
-
-        // Function to populate the table with data
-        function populateTable(data) {
-            data.forEach(row => {
-                const tr = document.createElement('tr');
-                const countryTd = document.createElement('td');
-                const countTd = document.createElement('td');
-
-                countryTd.textContent = row.country;
-                countTd.textContent = row.count;
-
-                tr.appendChild(countryTd);
-                tr.appendChild(countTd);
-                tableBody.appendChild(tr);
+        axios.get('https://<your-function-app-name>.azurewebsites.net/api/GetStudentCount')
+            .then(response => {
+                const data = response.data;
+                const tableBody = document.getElementById('student-count-table');
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    const countryCell = document.createElement('td');
+                    countryCell.textContent = item.Country;
+                    const countCell = document.createElement('td');
+                    countCell.textContent = item.StudentCount;
+                    row.appendChild(countryCell);
+                    row.appendChild(countCell);
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
             });
-        }
-
-        // Populate the table with the example data
-        populateTable(studentCountData);
     </script>
-
 </body>
 </html>
